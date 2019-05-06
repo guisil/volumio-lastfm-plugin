@@ -75,7 +75,8 @@ ControllerLastFM.prototype.onVolumioStart = function()
 			scrobbleThresholdInMilliseconds = self.config.get('streamScrobbleThreshold') * 1000;
 			
 		//Check if state title contains track number (is that an issue with volumio?)
-		console.log('TITLE: ' + state.title);
+		if(self.config.get('enable_debug_logging'))
+			self.logger.info('TITLE: ' + state.title);
 
 		if(state.title != undefined && state.title.indexOf(' - ') > -1)
 		{
@@ -86,9 +87,11 @@ ControllerLastFM.prototype.onVolumioStart = function()
 				finalTitle = titleSplit[1].trim();
 			}
 
-			console.log('FINAL TITLE: ' + finalTitle);
+			if(self.config.get('enable_debug_logging'))
+				self.logger.info('FINAL TITLE: ' + finalTitle);
 			state.title = finalTitle;
-			console.log('UPDATED TITLE: ' + state.title);
+			if(self.config.get('enable_debug_logging'))
+				self.logger.info('UPDATED TITLE: ' + state.title);
 		}
 
 		// Set initial previousState object
