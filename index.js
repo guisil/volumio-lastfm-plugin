@@ -73,7 +73,23 @@ ControllerLastFM.prototype.onVolumioStart = function()
 			scrobbleThresholdInMilliseconds = state.duration * (self.config.get('scrobbleThreshold') / 100) * 1000;
 		if(supportedStreamServices.indexOf(state.service) != -1)
 			scrobbleThresholdInMilliseconds = self.config.get('streamScrobbleThreshold') * 1000;
-				
+			
+		//Check if state title contains track number (is that an issue with volumio?)
+		if(state.title != undefined && state.title.indexOf(' - ') > -1)
+		{
+			var finalTitle = state.title;
+			var titleSplit = finalTitle.split('-');
+			if (!isNaN(titleSplit[0].trim())) // is a number (most likely a track number, since it's before a '-')
+			{
+				finalTitle = titleSplit[1].trim();
+			}
+			if(self.config.get('enable_debug_logging'))
+				self.logger.info('[LastFM] initial title: ' + state.title);
+			state.title = finalTitle;
+			if(self.config.get('enable_debug_logging'))
+				self.logger.info('[LastFM] updated title: ' + state.title);
+		}
+
 		// Set initial previousState object
 		var init = '';
 		if(self.previousState == null)
